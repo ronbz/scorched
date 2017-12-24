@@ -8,6 +8,14 @@ void game();
 void maps();
 void rules();
 void score();
+void writeNewPlayerToDatabase(char* fileName, char* userName);
+void updatePlayer(char *fileName, char* userName, int upDown);
+int returnWin(char* fileName, char* playerName);
+int returnLose(char* fileName, char* playerName);
+void highscoreTable(char *players);
+void linearShot(char board[][10], int x, int y);
+float returnRad(float deg);
+int return_Y_value_linearshot(int x, float m, int n);
 
 
 int main() {
@@ -79,7 +87,22 @@ void rules() {
 }
 
 void score() {
-	printf("\nTesting score\n\n");
+	writeNewPlayerToDatabase("test.txt", "Keren");
+	writeNewPlayerToDatabase("test.txt", "Keren");
+	writeNewPlayerToDatabase("test.txt", "Viktor");
+	writeNewPlayerToDatabase("test.txt", "Yogev");
+	writeNewPlayerToDatabase("test.txt", "Nico");
+	
+	updatePlayer("test.txt", "Keren", 1);
+	updatePlayer("test.txt", "Keren", 1);
+	updatePlayer("test.txt", "Viktor", 1);
+	updatePlayer("test.txt", "Viktor", -1);
+	updatePlayer("test.txt", "Yogev", 1);
+	updatePlayer("test.txt", "Nico", 1);
+	updatePlayer("test.txt", "Nico", 1);
+	updatePlayer("test.txt", "Nico", -1);
+	
+	highscoreTable("test.txt");
 }
 
 void maps(){
@@ -284,4 +307,267 @@ void maps(){
 		}
 
 }
+}
+
+void writeNewPlayerToDatabase(char* fileName, char* userName) {
+	FILE *fp;
+	char buff[10];
+	int flag = 0;
+	fp = fopen(fileName, "r");
+
+	if (fp == NULL) {
+		exit(1);
+	}
+	while (fscanf(fp,"%s",buff)!=EOF){
+		//printf("buff is: %s", buff);
+		if (strcmp(userName, buff) == 0) {
+			flag = 1;
+		}
+	}
+	fclose(fp);
+	fp = fopen(fileName, "a");
+
+	if (fp == NULL) {
+		exit(1);
+	}
+	//printf("test2\n");
+	if (flag == 0) {
+		fprintf(fp, "%s\t\t0\t\t  0\n", userName);
+	}
+	fclose(fp);
+
+}
+
+void updatePlayer(char *fileName, char* userName, int upDown) {
+	FILE *fp;
+	char buff[10];
+	int flag = 0;
+	char temp='0';
+	fp = fopen(fileName, "r+");
+
+	if (fp == NULL) {
+		exit(1);
+	}
+	if (upDown > 0) {
+		while (strcmp(buff,userName)!=0) {
+			fscanf(fp, "%s", buff);
+		}
+		
+		fscanf(fp, "%s", buff);
+		//printf("buff is: %s\n", buff);
+		buff[0] = buff[0]++;
+		//printf("buff is: %s\n", buff);
+		fseek(fp, -1, SEEK_CUR);
+		fputc(buff[0], fp);
+		fseek(fp, 0, SEEK_CUR);
+		
+	}
+	else {
+		while (strcmp(buff, userName) != 0) {
+			fscanf(fp, "%s", buff);
+		}
+		fscanf(fp, "%s", buff);
+		fscanf(fp, "%s", buff);
+		printf("buff is: %s\n", buff);
+		buff[0] = buff[0]++;
+		printf("buff is: %s\n", buff);
+		fseek(fp, -1, SEEK_CUR);
+		fputc(buff[0], fp);
+		fseek(fp, 0, SEEK_CUR);
+
+	}
+
+	fclose(fp);
+}
+int returnWin(char* fileName, char* playerName) {
+	//printf("tsetttt\n");
+	char buff[10];
+	FILE *fp;
+	fp = fopen(fileName, "r");
+	//printf("%s\n",fileName);
+	if (fp==NULL) { exit(1); }
+	//printf("test returnwin\n");
+	while (strcmp(buff, playerName) != 0) {
+		fscanf(fp, "%s", buff);
+	}
+	fscanf(fp, "%s", buff);
+	//printf("buff from returnwin is: %s \t%c\n", buff, buff[0]);
+	//printf("%d\n", atoi(buff));
+	return atoi(buff);
+}
+int returnLose(char* fileName, char* playerName) {
+	char buff[10];
+	FILE *fp;
+	fp = fopen(fileName, "r");
+	if (!fp) { exit(1); }
+	while (strcmp(buff, playerName) != 0) {
+		fscanf(fp, "%s", buff);
+	}
+	fscanf(fp, "%s", buff);
+	fscanf(fp, "%s", buff);
+	//printf("buff from returnwin is: %s \t%c\n", buff, buff[0]);
+	return atoi(buff);
+}
+
+
+
+void highscoreTable(char *players) {
+	char buffName[10], swapName[10];
+	int counter = 0,temp=0, swapWin=0, swapLose=0;
+	FILE* fpPlayers, *fpHighscoreTable;
+	fpPlayers = fopen(players, "r");
+	if (fpPlayers == NULL) { return exit(1); }
+	fpHighscoreTable = fopen("HighscoreTable.txt", "w");
+	if (fpHighscoreTable == NULL) { return exit(1); }
+	//printf("test3\n");
+	while (fscanf(fpPlayers, buffName) != EOF) {
+		
+		counter++;
+		fscanf(fpPlayers,"%s", buffName);//win
+		fscanf(fpPlayers, "%s", buffName);//lose
+	}
+	counter -= 2;
+	//char** arrName = (char*)malloc(sizeof(char)*counter);
+	//printf("test2\n");
+	char **arrName = malloc(counter * sizeof(char *)); // Allocate row pointers
+	for (int i = 0; i < counter; i++)
+		arrName[i] = malloc(10* sizeof(char));
+
+	arrName[counter-1] = '\0';
+
+	int* arrWin = (int)malloc(sizeof(int)*counter);
+	int* arrLose = (int)malloc(sizeof(int)*counter);
+	fseek(fpPlayers, 0, SEEK_SET);
+	//printf("test1\n");
+	while (fscanf(fpPlayers, "%s",buffName) != EOF) {
+		//printf("test while\n");
+		//printf("buff name: %s\n", buffName);
+		strcpy(arrName[temp], buffName);
+		//printf("arrname is: %s\n",arrName[temp]);
+		fscanf(fpPlayers,"%s", buffName);
+		//printf("why keren why???\n");
+		arrWin[temp] = returnWin(players, arrName[temp]);
+		//printf("why?????\n");
+		fscanf(fpPlayers,"%s", buffName);
+		arrLose[temp] = returnLose(players, arrName[temp]);
+		temp++;
+		//printf("temp is: %d\n", temp);
+	}
+	//printf("test\n");
+	fseek(fpPlayers, 0, SEEK_SET);
+
+	for (int i = counter - 2; i >= 0; i--) {
+		//printf("counter is: %d\n", counter);
+		printf("name: %s win: %d lose: %d\n", arrName[i], arrWin[i],arrLose[i]);
+		//fprintf(fpHighscoreTable, "%s\t\t%d\t\t  %d\n", arrName[i], arrWin[i], arrLose[i]);
+	}
+
+	for (int i = 0; i < (counter - 1); i++)
+	{
+		for (int j = 0; j < counter - i - 1; j++)
+		{
+			//printf("name: %s\n", arrName[j]);
+			if (arrWin[j] < arrWin[j + 1]) 
+			{
+				swapWin = arrWin[j];
+				arrWin[j] = arrWin[j + 1];
+				arrWin[j + 1] = swapWin;
+
+				swapLose = arrLose[j];
+				arrLose[j] = arrLose[j + 1];
+				arrLose[j + 1] = swapLose;
+
+				strcpy(swapName, arrName[j]);
+				strcpy(arrName[j], arrName[j + 1]);
+				strcpy(arrName[j + 1] , swapName);
+			}
+			
+			else if (arrWin[j] == arrWin[j + 1]) {
+				if (arrLose[j] > arrLose[j + 1])
+				{
+					swapWin = arrWin[j];
+					arrWin[j] = arrWin[j + 1];
+					arrWin[j + 1] = swapWin;
+
+					swapLose = arrLose[j];
+					arrLose[j] = arrLose[j + 1];
+					arrLose[j + 1] = swapLose;
+
+					strcpy(swapName, arrName[j]);
+					strcpy(arrName[j], arrName[j + 1]);
+					strcpy(arrName[j + 1], swapName);
+				}
+			}
+		}
+	}
+	for (int i =0 ; i<counter - 1; i++) {
+		//printf("counter is: %d\n", counter);
+		printf("name: %s win: %d\n", arrName[i],arrWin[i]);
+		fprintf(fpHighscoreTable, "%s\t\t%d\t\t  %d\n", arrName[i],arrWin[i],arrLose[i]);
+	}
+
+
+	fclose(fpHighscoreTable);
+	fclose(fpPlayers);
+}
+void linearShot(char board[][10], int x, int y) {
+	int m, n=0, xtemp = 0, y_val=0;
+	int flag = 0;
+	float angleChoice, radFromDeg, angleRad;
+	char leftRight[10];
+	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
+	scanf("%s", leftRight);
+	if (strcmp(leftRight, "right") == 0) {
+		printf("Choose angle to shoot from 0-90:\n");
+		scanf("%f", &angleChoice);
+		printf("angle choice: %f\n", angleChoice);
+		radFromDeg = ((float)(angleChoice*3.14) /(float) 180.0);//returnRad(angleChoice);
+		printf("radfromdeg is: %f\n", radFromDeg);
+		angleRad = tan(radFromDeg);
+		printf("angle rad :%f\n", angleRad);
+		printf("test3\n");
+		while (flag==0){
+			y_val = 0;
+			y_val = return_Y_value_linearshot(xtemp, 1.0, n);
+
+			printf("y_val is: %d ",y_val);
+			printf("xtemp is: %d\n", xtemp);
+			if ( y_val== 9) { flag = 1; }
+			if (xtemp == 9) { flag = 1; }
+			/*
+			return_Y_value_linearshot(xtemp, angleRad, y) < 50 && board[return_Y_value_linearshot(xtemp, angleRad, y)][xtemp] != ' '&&
+			board[return_Y_value_linearshot(xtemp, angleRad, y)][xtemp] != 'X'&&
+			board[return_Y_value_linearshot(xtemp, angleRad, y)][xtemp] != 'T'&& xtemp<250) {
+			*/
+			
+			//printf("test\n");
+			
+			//printf("char is: %c\t", board[y_val][xtemp]);
+			//printf("between\n");
+			board[y_val][xtemp] = '*';
+			//printf("test4\n");
+			xtemp++;
+		}
+		
+	}
+	
+	for (int i = 0; i <= 9; i++) {
+		for (int j = 0; j <= 9; j++) {
+			printf("%c", board[i][j]);
+		}
+		printf("\n");
+	}
+	printf("over linear\n");
+}
+float returnRad(float deg) {
+	printf("val is: %f\n deg: %f\nacos: %f", (deg*acos(-1) / 180),&deg,acos(-1));
+	return (deg*3.14 / 180);
+
+}
+int return_Y_value_linearshot(int x, float m, int n) {
+	//printf("y val: %d\n", (int)((m*x) + n));
+	int result = 0;
+	result= ((((int)m)*x) + n);
+	return result;
+
 }
