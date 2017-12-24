@@ -1,58 +1,8 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
 
-
-int main() {
-	
-	//void startGame()
 	{
-
-		//char player1[20];
-		//char player2[20];
-		//char player3[20];	
-		//char player4[20];
 		int choise=0, map;
 		char mat[50][250];
-/*
-		printf("\nplaese enter the number of players(2 - 4):\t");
-		scanf("%d", &choise);
 
-
-		while (choise > 4 || choise < 2)
-		{
-			printf("wrong number of players, please try again:");
-			scanf("%d", &choise);
-		}
-
-		switch (choise)
-		{
-		case 2:
-			printf("\nenter first player name:\t");
-			gets(player1);
-			printf("\nenter second player name:\t");
-			gets(player2);
-			break;
-		case 3:
-			printf("\nenter first player name:\t");
-			gets(player1);
-			printf("\nenter second player name:\t");
-			gets(player2);
-			printf("\nenter third player name:\t");
-			gets(player3);
-			break;
-
-		case 4:
-			printf("\nenter first player name:\t");
-			gets(player1);
-			printf("\nenter second player name:\t");
-			gets(player2);
-			printf("\nenter third player name:\t");
-			gets(player3);
-			printf("\nenter fourth player name:\t");
-			gets(player4);
-			break;
-		}
-*/
 		printf("\nplease select the level difficulty (1-3):\t");
 		scanf("%d", &map);
 
@@ -250,5 +200,3 @@ int main() {
 		}
 
 	}
-	return 0;
-}
