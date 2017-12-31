@@ -41,18 +41,18 @@ int main() {
 		printf("\nenter first player name:\t");
 		pl1 = NewPlayer();
 		printf("\nenter second player name:\t");
-		NewPlayer();
+		pl2 = NewPlayer();
 		CreatMap();
 		UpdatPlace(pl1);
 		UpdatPlace(pl2);
 		break;
 	case 3:
 		printf("\nenter first player name:\t");
-		NewPlayer();
+		pl1 = NewPlayer();
 		printf("\nenter second player name:\t");
-		NewPlayer();
+		pl2 = NewPlayer();
 		printf("\nenter third player name:\t");
-		NewPlayer();
+		pl3 = NewPlayer();
 		CreatMap();
 		UpdatPlace(pl1);
 		UpdatPlace(pl2);
@@ -61,13 +61,13 @@ int main() {
 
 	case 4:
 		printf("\nenter first player name:\t");
-		NewPlayer();
+		pl1 = NewPlayer();
 		printf("\nenter second player name:\t");
-		NewPlayer();
+		pl2 = NewPlayer();
 		printf("\nenter third player name:\t");
-		NewPlayer();
+		pl3 = NewPlayer();
 		printf("\nenter fourth player name:\t");
-		NewPlayer();
+		pl4 = NewPlayer();
 		CreatMap();
 		UpdatPlace(pl1);
 		UpdatPlace(pl2);
