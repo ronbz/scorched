@@ -1,3 +1,8 @@
+//
+סידרתי את הבעיה שהיתה עם השחקנים. יש לממש את :
+UpdatePlace()
+CreatMap()
+//
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
