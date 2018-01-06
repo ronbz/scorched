@@ -147,10 +147,8 @@ void game() {
 		printMap(mat);
 		break;
 	}
-	movement(mat,pl1);
-	printMap(mat);
-	movement(mat,pl2);
-	printMap(mat);
+	movement(mat, pl1);
+	movement(mat, pl2);
 
 }
 
@@ -590,11 +588,11 @@ void movement(char mat[height][length], Player *pl) {
 	int count = 5, steps = 0, x = pl->i, y = pl->j, tempcount = 0;
 	char dir;
 	while (count > 0) {
-		printf("\n %s,",pl->Name);
+		printf("\n %s,", pl->Name);
 		printf("Which direction would you like to move? L/R/N=don't move \n");
 		scanf("%c", &dir);
 		getchar();
-		while ((dir != 'r') && (dir != 'R') && (dir != 'l') && (dir != 'L')&&(dir!='n')&&(dir!='N')) {
+		while ((dir != 'r') && (dir != 'R') && (dir != 'l') && (dir != 'L') && (dir != 'n') && (dir != 'N')) {
 			printf("Wrong key, please try again:\nWhich direction would you like to move? L/R/N=don't move \n");
 			scanf("%c", &dir);
 			getchar();
@@ -640,8 +638,11 @@ void movement(char mat[height][length], Player *pl) {
 			if ((tempcount == stepflag) && ((count - tempcount) >= 0)) {
 				mat[oldx][oldy] = ' ';
 				count = count - tempcount;
+				pl->i = x;
+				pl->j = y;
+				mat[pl->i][pl->j] = pl->id;
 				printMap(mat);
-				printf("MOVED! %d steps left!\n", count);
+				printf("\nMOVED! %d steps left!\n", count);
 			}
 			else {
 				printf("can't move, choose other direction or fewer steps \n");
@@ -676,8 +677,11 @@ void movement(char mat[height][length], Player *pl) {
 			if ((tempcount == stepflag) && ((count - tempcount) >= 0)) {
 				mat[oldx][oldy] = ' ';
 				count = count - tempcount;
+				pl->i = x;
+				pl->j = y;
+				mat[pl->i][pl->j] = pl->id;
 				printMap(mat);
-				printf("MOVED! %d steps left!\n", count);
+				printf("\nMOVED! %d steps left!\n", count);
 			}
 			else {
 				printf("can't move, choose other direction or fewer steps \n");
@@ -687,8 +691,4 @@ void movement(char mat[height][length], Player *pl) {
 			}
 		}
 	}
-	pl->i = x;
-	pl->j = y;
-	mat[pl->i][pl->j] = pl->id;
-
 }
