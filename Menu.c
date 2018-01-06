@@ -86,18 +86,18 @@ void linearShot(char board[][250], int x, int y,Player* p1,Player *p2,Player *p3
 	if (strcmp(leftRight, "right") == 0) {
 		printf("Choose angle to shoot from 0-90:\n");
 		scanf("%f", &angleChoice);
-		printf("angle choice: %f\n", angleChoice);
+		//printf("angle choice: %f\n", angleChoice);
 		radFromDeg = ((float)(angleChoice*3.14) /(float) 180.0);//returnRad(angleChoice);
-		printf("radfromdeg is: %f\n", radFromDeg);
+		//printf("radfromdeg is: %f\n", radFromDeg);
 		angleRad = tan(radFromDeg);
-		printf("angle rad :%f\n", angleRad);
+		//printf("angle rad :%f\n", angleRad);
 		//printf("test3\n");
 		
 		while (flag==0){
 			int y_val_temp = 0;
 			y_val_temp = angleRad*(xtemp);
-			printf("y_val is: %d ",y_val_temp);
-			printf("xtemp is: %d\n", xtemp);
+			//printf("y_val is: %d ",y_val_temp);
+			//printf("xtemp is: %d\n", xtemp);
 			if ( y_val_temp+y> 49) { flag = 1; }
 			if (xtemp+x > 249) { flag = 1; }
 			if (board[49- y_val_temp - y][xtemp+x] == 'x') { flag = 1; }
@@ -117,22 +117,18 @@ void linearShot(char board[][250], int x, int y,Player* p1,Player *p2,Player *p3
 	else {
 		printf("Choose angle to shoot from 0-90:\n");
 		scanf("%f", &angleChoice);
-		printf("angle choice: %f\n", angleChoice);
+		//printf("angle choice: %f\n", angleChoice);
 		radFromDeg = ((float)(angleChoice*3.14) / (float) 180.0);//returnRad(angleChoice);
-		printf("radfromdeg is: %f\n", radFromDeg);
+		//printf("radfromdeg is: %f\n", radFromDeg);
 		angleRad = tan(radFromDeg);
-		printf("angle rad :%f\n", angleRad);
+		//printf("angle rad :%f\n", angleRad);
 		//xtemp = 49;
 		while (flag == 0) {
-			int y_val_temp = 0;
-			
+			int y_val_temp = 0;			
 			//y_val = return_Y_value_linearshot(xtemp, 1.0, n);
-
 			y_val_temp = angleRad*(xtemp);
-
-
-			printf("y_val is: %d ", y_val_temp);
-			printf("xtemp is: %d\n", xtemp);
+			//printf("y_val is: %d ", y_val_temp);
+			//printf("xtemp is: %d\n", xtemp);
 			if (y_val_temp - y> 49) { flag = 1; }
 			if (xtemp+x >249) { flag = 1; }
 			if (board[49 - y_val_temp - y][249-xtemp-x] == 'x') { flag = 1; }
@@ -147,11 +143,92 @@ void linearShot(char board[][250], int x, int y,Player* p1,Player *p2,Player *p3
 			if (flag == 0) { board[49 - y_val_temp - y][249- xtemp - x] = '*'; }
 			xtemp++;
 		}
-
-
-
 	}
 	
+	for (int i = 0; i <= 49; i++) {
+		for (int j = 0; j <= 249; j++) {
+			printf("%c", board[i][j]);
+		}
+		printf("\n");
+	}
+	//printf("over linear\n");
+}
+float returnRad(float deg) {
+	printf("val is: %f\n deg: %f\nacos: %f", (deg*acos(-1) / 180),&deg,acos(-1));
+	return (deg*3.14 / 180);
+
+}
+
+void parabolicShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
+	float a = 0, b = 0, d = 1; int c = y, xtemp = 0;
+	int flag = 0;
+	char leftRight[10];
+	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
+	scanf("%s", leftRight);
+	if (strcmp(leftRight, "right") == 0) {
+		printf("For the equation 'y=a(x*1/d)^2+b(x*1/d)+c'\n");
+		printf("Choose the value for 'a' : \n");
+		scanf("%f", &a);
+		printf("Choose the value for 'b' :\n");
+		scanf("%f", &b);
+		printf("Choose the value for 'd'\n*DISCLOSURE*'d' is used mostly for distance\n :\n");
+		scanf("%f", &d);
+		while (flag == 0) {
+			int y_val_temp = 0;
+			
+			y_val_temp = -a*pow(((float)(xtemp/d)), 2) + b*((float)(xtemp/d))+c;
+
+			printf("y_val is: %d ", y_val_temp);
+			printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp + y> 49) { flag = 1; }
+			if (y_val_temp < 0) { flag = 1; }
+			if (xtemp + x > 249) { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x] == '1' || board[49 - y_val_temp - y][xtemp + x] == '2' || board[49 - y_val_temp - y][xtemp + x] == '3' || board[49 - y_val_temp - y][xtemp + x] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][xtemp + x] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][xtemp + x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][xtemp + x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][xtemp + x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][xtemp + x] = '*'; }
+			xtemp++;
+		}
+	
+	}
+	else{
+		printf("For the equation 'y=ax^2+bx+c'\n");
+		printf("Choose the value for 'a' : \n");
+		scanf("%f", &a);
+		printf("Choose the value for 'b' :\n");
+		scanf("%f", &b);
+		printf("Choose the value for 'd'\n*DISCLOSURE*'d' is used mostly for distance\n :\n");
+		scanf("%f", &d);
+		while (flag == 0) {
+			int y_val_temp = 0;
+			
+			y_val_temp = -a*pow(((float)(-xtemp / d)), 2) - b*((float)(-xtemp / d)) + c;
+		//	printf("y_val is: %d ", y_val_temp);
+			//printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp - y> 49) { flag = 1; }
+			if (y_val_temp < 0) { flag = 1; }
+
+			if (xtemp + x >249) { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+			xtemp++;
+		}
+
+	}
 
 	for (int i = 0; i <= 49; i++) {
 		for (int j = 0; j <= 249; j++) {
@@ -159,19 +236,99 @@ void linearShot(char board[][250], int x, int y,Player* p1,Player *p2,Player *p3
 		}
 		printf("\n");
 	}
-	printf("over linear\n");
-}
-float returnRad(float deg) {
-	printf("val is: %f\n deg: %f\nacos: %f", (deg*acos(-1) / 180),&deg,acos(-1));
-	return (deg*3.14 / 180);
+
 
 }
+
+void logShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
+	float a = 1, base = 1;
+	int flag = 0, xtemp = 1;
+	char leftRight[10];
+
+	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
+	scanf("%s", leftRight);
+	printf("From the equation y=a*log(base)(argument)\n");
+	printf("Enter value for 'a': \n");
+	scanf("%f", &a);
+	printf("Enter value for the base: \n");
+	scanf("%f", &base);
+	if (strcmp(leftRight, "right") == 0) {
+		
+		while (flag == 0) {
+			int y_val_temp = 0;
+
+			y_val_temp = a*(log(xtemp) / log(base));
+
+			printf("y_val is: %d ", y_val_temp);
+			printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp + y> 49) { flag = 1; }
+			if (y_val_temp < 0) { flag = 1; }
+			if (xtemp + x > 249) { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x-1] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x-1] == '1' || board[49 - y_val_temp - y][xtemp + x-1] == '2' || board[49 - y_val_temp - y][xtemp + x-1] == '3' || board[49 - y_val_temp - y][xtemp + x-1] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][xtemp + x-1] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][xtemp + x-1] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][xtemp + x-1] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][xtemp + x-1] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][xtemp + x-1] = '*'; }
+			xtemp++;
+		}
+	
+	}
+	else {
+
+		while (flag == 0) {
+			int y_val_temp = 0;
+
+			y_val_temp = a*(log(xtemp) / log(base));
+
+			//	printf("y_val is: %d ", y_val_temp);
+			//printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp - y> 49) { flag = 1; }
+			if (y_val_temp < 0) { flag = 1; }
+
+			if (xtemp + x >249) { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+			xtemp++;
+		}
+
+	}
+	for (int i = 0; i <= 49; i++) {
+		for (int j = 0; j <= 249; j++) {
+			printf("%c", board[i][j]);
+		}
+		printf("\n");
+	}
+
+
+}
+
 int return_Y_value_linearshot(int x, float m, int n) {
 	//printf("y val: %d\n", (int)((m*x) + n));
 	int result = 0;
 	result= ((((int)m)*x) + n);
 	return result;
 
+}
+
+void clear_shot_path(char board[][250]) {
+	for (int i = 0; i < 49; i++) {
+		for (int j = 0; j < 249; j++) {
+			if (board[i][j] == '*') { board[i][j] = ' '; }
+		}
+	}
 }
 
 int main() {
@@ -197,11 +354,11 @@ int main() {
 		printf("\n");
 	}
 
-
+/*
 	for (i = 0; i < 249; i++) {
 		mat[20][i] = 'x';
 	}
-	
+*/	
 	struct Player *p1 = (struct Player*)malloc(sizeof(struct Player));
 	struct Player *p2 = (struct Player*)malloc(sizeof(struct Player));
 	struct Player *p3 = (struct Player*)malloc(sizeof(struct Player));
@@ -209,7 +366,11 @@ int main() {
 	p1->i = 20; p1->j = 30; p1->Lives = 2; strcpy(p1->Name, "Yogev");
 	mat[p1->i][p1->j] = '1';
 	printf("p1 lives before: %d\n", p1->Lives);
-	linearShot(mat, 30, 10,p1,p2=NULL,p3=NULL,p4=NULL);
+
+	//linearShot(mat, 30, 10,p1,p2=NULL,p3=NULL,p4=NULL);
+	//parabolicShot(mat, 0, 10, p1, p2 = NULL, p3 = NULL, p4 = NULL);
+	logShot(mat, 50, 10, p1, p2 = NULL, p3 = NULL, p4 = NULL);
+
 	printf("p1 lives after: %d\n", p1->Lives);
 
 	
