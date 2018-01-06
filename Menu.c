@@ -901,8 +901,9 @@ void movement(char mat[height][length], Player *pl) {
 
 	void parabolicShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
 		float a = 0, b = 0, d = 1; int c = y, xtemp = 0;
-		int flag = 0;
+		int flag = 0, y_val_temp = 0;
 		char leftRight[10];
+		printf("x----%d  y-----%d\n", x, y);
 		printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
 		scanf("%s", leftRight);
 		if (strcmp(leftRight, "right") == 0) {
@@ -914,12 +915,12 @@ void movement(char mat[height][length], Player *pl) {
 			printf("Choose the value for 'd'\n*DISCLOSURE*'d' is used mostly for distance\n :\n");
 			scanf("%f", &d);
 			while (flag == 0) {
-				int y_val_temp = 0;
+				y_val_temp = 0;
 
 				y_val_temp = -a*pow(((float)(xtemp / d)), 2) + b*((float)(xtemp / d)) + c;
 
-				printf("y_val is: %d ", y_val_temp);
-				printf("xtemp is: %d\n", xtemp);
+			//	printf("y_val is: %d ", y_val_temp);
+			//	printf("xtemp is: %d\n", xtemp);
 				if (y_val_temp + y> 49) { flag = 1; }
 				if (y_val_temp < 0) { flag = 1; }
 				if (xtemp + x > 249) { flag = 1; }
@@ -950,16 +951,16 @@ void movement(char mat[height][length], Player *pl) {
 			printf("Choose the value for 'd'\n*DISCLOSURE*'d' is used mostly for distance\n :\n");
 			scanf("%f", &d);
 			while (flag == 0) {
-				int y_val_temp = 0;
+				y_val_temp = 0;
 
 				y_val_temp = -a*pow(((float)(-xtemp / d)), 2) - b*((float)(-xtemp / d)) + c;
 				//	printf("y_val is: %d ", y_val_temp);
 				//printf("xtemp is: %d\n", xtemp);
 				if (y_val_temp - y> 49) { flag = 1; }
-				if (y_val_temp < 0) { flag = 1; }
+				if (y_val_temp+y < 0) { flag = 1; }
 
 				if (x - xtemp<0) { flag = 1; }
-				if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+				if (board[49 - y_val_temp - y][x-xtemp] == 'x') { flag = 1; }
 				if (xtemp > 1) {
 					if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
 						flag = 1;
@@ -971,13 +972,14 @@ void movement(char mat[height][length], Player *pl) {
 					}
 				}
 				if (xtemp > 1) {
-					if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+					if (flag == 0) { board[49 - y_val_temp - y][x-xtemp] = '*'; }
 				}
 				xtemp++;
 			}
 
 		}
-
+		//printf("y_val is: %d ", y_val_temp);
+		//printf("xtemp is: %d\n", xtemp);
 		for (int i = 0; i <= 49; i++) {
 			for (int j = 0; j <= 249; j++) {
 				printf("%c", board[i][j]);
@@ -1037,25 +1039,25 @@ void movement(char mat[height][length], Player *pl) {
 
 				y_val_temp = a*(log(xtemp) / log(base));
 
-				//	printf("y_val is: %d ", y_val_temp);
+				//printf("y_val is: %d ", y_val_temp);
 				//printf("xtemp is: %d\n", xtemp);
 				if (y_val_temp - y> 49) { flag = 1; }
 				if (y_val_temp < 0) { flag = 1; }
 
 				if (x - xtemp<0) { flag = 1; }
-				if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+				if (board[49 - y_val_temp - y][x-xtemp+1] == 'x') { flag = 1; }
 				if (xtemp > 1) {
-					if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
+					if (board[49 - y_val_temp - y][x - xtemp + 1] == '1' || board[49 - y_val_temp - y][x - xtemp + 1] == '2' || board[49 - y_val_temp - y][x - xtemp + 1] == '3' || board[49 - y_val_temp - y][x - xtemp + 1] == '4') {
 						flag = 1;
 						//!function for hit!
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+						if (board[49 - y_val_temp - y][x - xtemp+1] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+						if (board[49 - y_val_temp - y][x - xtemp+1] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+						if (board[49 - y_val_temp - y][x - xtemp+1] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+						if (board[49 - y_val_temp - y][x - xtemp+1] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
 					}
 				}
 				if (xtemp > 1) {
-					if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+					if (flag == 0) { board[49 - y_val_temp - y][x - xtemp + 1] = '*'; }
 				}
 				xtemp++;
 			}
@@ -1120,25 +1122,25 @@ void movement(char mat[height][length], Player *pl) {
 
 				y_val_temp = a*sin(b*xtemp);
 
-				printf("y_val is: %d ", y_val_temp);
-				printf("xtemp is: %d\n", xtemp);
-				if (y_val_temp - y> 49) { flag = 1; }
-				//if (y_val_temp < 0) { flag = 1; }
+				printf("y_val is: %d\t y is: %d \n", y_val_temp,y);
+				printf("xtemp is: %d\tx is:%d\n", xtemp,x);
+				if (y + y_val_temp > 49) { flag = 1; printf("flag 1\n"); }
+				if (y+y_val_temp < 0) { flag = 1; printf("flag 2\n");}
 
-				if (x - xtemp<0) { flag = 1; }
-				if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+				if (x - xtemp<0) { flag = 1; printf("flag 3\n");}
+				if (board[49 - y_val_temp - y][x-xtemp] == 'x') { flag = 1; printf("flag 4\n");}
 				if (xtemp > 1) {
-					if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
+					if (board[49 - y_val_temp - y][x - xtemp] == '1' || board[49 - y_val_temp - y][x - xtemp] == '2' || board[49 - y_val_temp - y][x - xtemp] == '3' || board[49 - y_val_temp - y][x - xtemp] == '4') {
 						flag = 1;
 						//!function for hit!
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
-						if (board[49 - y_val_temp - y][x - xtemp<0] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+						if (board[49 - y_val_temp - y][x - xtemp] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+						if (board[49 - y_val_temp - y][x - xtemp] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+						if (board[49 - y_val_temp - y][x - xtemp] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+						if (board[49 - y_val_temp - y][x - xtemp] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
 					}
 				}
 				if (xtemp > 1) {
-					if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+					if (flag == 0) { board[49 + y_val_temp - y][x-xtemp] = '*'; }
 				}
 				xtemp++;
 			}
