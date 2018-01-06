@@ -148,9 +148,10 @@ void game() {
 		break;
 	}
 	movement(mat,pl1);
+	printMap(mat);
 	movement(mat,pl2);
-	movement(mat,pl3);
-	movement(mat,pl4);
+	printMap(mat);
+
 }
 
 Player NewPlayer(Player *pl, int counter) {
@@ -593,6 +594,11 @@ void movement(char mat[height][length], Player *pl) {
 		printf("Which direction would you like to move? L/R/N=don't move \n");
 		scanf("%c", &dir);
 		getchar();
+		while ((dir != 'r') && (dir != 'R') && (dir != 'l') && (dir != 'L')&&(dir!='n')&&(dir!='N')) {
+			printf("Wrong key, please try again:\nWhich direction would you like to move? L/R/N=don't move \n");
+			scanf("%c", &dir);
+			getchar();
+		}
 		if ((dir >= 65) && (dir <= 90)) {
 			dir = dir + 32;
 		}
@@ -642,7 +648,7 @@ void movement(char mat[height][length], Player *pl) {
 				break;
 			}
 		}
-		if (dir == 'l') {
+		else if (dir == 'l') {
 			oldy = y;
 			oldx = x;
 			while (steps > 0) {
