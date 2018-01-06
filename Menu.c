@@ -147,9 +147,11 @@ void game() {
 		printMap(mat);
 		break;
 	}
-	movement(mat, pl1);
-	movement(mat, pl2);
-
+	while ((pl1->Lives != 0) && (pl2->Lives != 0))
+	{
+		movement(mat, pl1);
+		movement(mat, pl2);
+	}
 }
 
 Player NewPlayer(Player *pl, int counter) {
@@ -587,15 +589,19 @@ void score() {
 void movement(char mat[height][length], Player *pl) {
 	int count = 5, steps = 0, x = pl->i, y = pl->j, tempcount = 0;
 	char dir;
-	while (count > 0) {
+	while (count > 0)
+	{
 		printf("\n %s,", pl->Name);
-		printf("Which direction would you like to move? L/R/N=don't move \n");
+		printf(" Which direction would you like to move? L/R/N=don't move \n");
 		scanf("%c", &dir);
 		getchar();
+		fflush(stdin);
 		while ((dir != 'r') && (dir != 'R') && (dir != 'l') && (dir != 'L') && (dir != 'n') && (dir != 'N')) {
 			printf("Wrong key, please try again:\nWhich direction would you like to move? L/R/N=don't move \n");
+			getchar();
 			scanf("%c", &dir);
 			getchar();
+			fflush(stdin);
 		}
 		if ((dir >= 65) && (dir <= 90)) {
 			dir = dir + 32;
@@ -606,6 +612,12 @@ void movement(char mat[height][length], Player *pl) {
 		printf("You have %d steps left. \nHow many steps would you like to move?\n", count);
 		scanf("%d", &steps);
 		getchar();
+		while (steps > count)
+		{
+			printf("cant move try again:\t");
+			scanf("%d", &steps);
+			getchar();
+		}
 		int stepflag = steps;
 		tempcount = 0;
 		int oldy = 0;
