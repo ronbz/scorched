@@ -5,7 +5,74 @@
 #include<string.h>
 #include<math.h>
 
-void linearShot(char board[][50], int x, int y) {
+typedef struct Player {
+	char Name[10];
+	int i;
+	int j;
+	int Lives;
+	int id;
+}Player;
+
+
+void updatePlayer(char fileName[], char* userName, int upDown) {
+	FILE *fp;
+	char buff[10];
+	int flag = 0;
+	char temp = '0';
+	fp = fopen(fileName, "r+");
+
+	if (fp == NULL) {
+		exit(1);
+	}
+	if (upDown > 0) {
+		while (strcmp(buff, userName) != 0) {
+			fscanf(fp, "%s", buff);
+		}
+
+		fscanf(fp, "%s", buff);
+		//printf("buff is: %s\n", buff);
+		buff[0] = buff[0]++;
+		//printf("buff is: %s\n", buff);
+		fseek(fp, -1, SEEK_CUR);
+		fputc(buff[0], fp);
+		fseek(fp, 0, SEEK_CUR);
+
+	}
+	else {
+		while (strcmp(buff, userName) != 0) {
+			fscanf(fp, "%s", buff);
+		}
+		fscanf(fp, "%s", buff);
+		fscanf(fp, "%s", buff);
+		printf("buff is: %s\n", buff);
+		buff[0] = buff[0]++;
+		printf("buff is: %s\n", buff);
+		fseek(fp, -1, SEEK_CUR);
+		fputc(buff[0], fp);
+		fseek(fp, 0, SEEK_CUR);
+
+	}
+
+	fclose(fp);
+}
+void Player_get_hit(char board[][250], int x, int y, Player *player) {
+	player->Lives--;
+	if (player->Lives == 0) {
+		printf("PLAYER %c has no lives left, %s has been KILLED!\n", board[player->i][player->j], player->Name);
+		printf("x: %d\ty: %d\n", x, y);
+		board[y][x] = ' ';
+		char buff[10];
+		strcpy(buff, player->Name);
+		updatePlayer("test.txt", buff, -1);
+
+	}
+	else {
+		printf("PLAYER %c got HIT!, %s has %d live left!\n", board[x][y], player->Name, player->Lives);
+		printf("x: %d\ty: %d\n", x, y);
+	}
+
+}
+void linearShot(char board[][250], int x, int y,Player* p1,Player *p2,Player *p3,Player *p4) {
 	
 	/*MUST CHANGE BOARD BORDERS FOR THE REAL BOARD!!*/
 	/*NEED TO ADD TANK STRUCT FOR X,Y CALIBRATION*/
@@ -28,21 +95,21 @@ void linearShot(char board[][50], int x, int y) {
 		
 		while (flag==0){
 			int y_val_temp = 0;
-			//y_val = return_Y_value_linearshot(xtemp, 1.0, n);
-
 			y_val_temp = angleRad*(xtemp);
-
-
 			printf("y_val is: %d ",y_val_temp);
 			printf("xtemp is: %d\n", xtemp);
-			if ( y_val_temp> 49) { flag = 1; }
-			if (xtemp > 49) { flag = 1; }
-			if (board[49-y_val_temp][xtemp] == 'x') { flag = 1; }
-			if (board[49-y_val_temp][xtemp] == '1' || board[49-y_val_temp][xtemp] == '2' || board[49-y_val_temp][xtemp] == '3' || board[49-y_val_temp][xtemp] == '4') {
+			if ( y_val_temp+y> 49) { flag = 1; }
+			if (xtemp+x > 249) { flag = 1; }
+			if (board[49- y_val_temp - y][xtemp+x] == 'x') { flag = 1; }
+			if (board[49- y_val_temp - y][xtemp+x] == '1' || board[49- y_val_temp - y][xtemp+x] == '2' || board[49- y_val_temp - y][xtemp+x] == '3' || board[49- y_val_temp - y][xtemp+x] == '4') {
 				flag = 1;
 				//!function for hit!
+				if (board[49 - y_val_temp-y][xtemp+x] == '1'&&p1!=NULL) {Player_get_hit(board, p1->i, p1->j, p1);}
+				if (board[49 - y_val_temp - y][xtemp+x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][xtemp+x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][xtemp+x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
 			}
-			if (flag == 0) {board[49 - y_val_temp][xtemp] = '*';}
+			if (flag == 0) {board[49 - y_val_temp - y][xtemp+x] = '*';}
 			xtemp++;
 		}
 		
@@ -66,14 +133,18 @@ void linearShot(char board[][50], int x, int y) {
 
 			printf("y_val is: %d ", y_val_temp);
 			printf("xtemp is: %d\n", xtemp);
-			if (y_val_temp> 49) { flag = 1; }
-			if (xtemp >49) { flag = 1; }
-			if (board[49 - y_val_temp][49-xtemp] == 'x') { flag = 1; }
-			if (board[49 - y_val_temp][49-xtemp] == '1' || board[49 - y_val_temp][49-xtemp] == '2' || board[49 - y_val_temp][49-xtemp] == '3' || board[49 - y_val_temp][49-xtemp] == '4') {
+			if (y_val_temp - y> 49) { flag = 1; }
+			if (xtemp+x >249) { flag = 1; }
+			if (board[49 - y_val_temp - y][249-xtemp-x] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][249- xtemp - x] == '1' || board[49 - y_val_temp - y][249- xtemp - x] == '2' || board[49 - y_val_temp - y][249- xtemp - x] == '3' || board[49 - y_val_temp - y][249- xtemp - x] == '4') {
 				flag = 1;
 				//!function for hit!
+				if (board[49 - y_val_temp - y][249- xtemp - x] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][249- xtemp - x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][249- xtemp - x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][249- xtemp - x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
 			}
-			if (flag == 0) { board[49 - y_val_temp][49-xtemp] = '*'; }
+			if (flag == 0) { board[49 - y_val_temp - y][249- xtemp - x] = '*'; }
 			xtemp++;
 		}
 
@@ -83,7 +154,7 @@ void linearShot(char board[][50], int x, int y) {
 	
 
 	for (int i = 0; i <= 49; i++) {
-		for (int j = 0; j <= 49; j++) {
+		for (int j = 0; j <= 249; j++) {
 			printf("%c", board[i][j]);
 		}
 		printf("\n");
@@ -105,13 +176,13 @@ int return_Y_value_linearshot(int x, float m, int n) {
 
 int main() {
 	int i, j/*x,y,ty,tx,shot,sangle*/;
-	char mat[50][50];
+	char mat[50][250];
 	/*printf("choose place for tank (x,y): \n");
 	scanf("%d %d", &x, &y);
 	x = x - 1;
 	y = y - 1;*/
 	for (i = 0; i <= 49; i++) {
-		for (j = 0; j <= 49; j++) {
+		for (j = 0; j <= 249; j++) {
 			/*if ((i==x)&&(j==y)) {
 			mat[i][j] = ' ';
 			}
@@ -120,13 +191,26 @@ int main() {
 		}
 	}
 	for (i = 0; i <= 49; i++) {
-		for (j = 0; j <= 49; j++) {
+		for (j = 0; j <= 249; j++) {
 			printf("%c", mat[i][j]);
 		}
 		printf("\n");
 	}
-	linearShot(mat, 0, 0);
 
+
+	for (i = 0; i < 249; i++) {
+		mat[20][i] = 'x';
+	}
+	
+	struct Player *p1 = (struct Player*)malloc(sizeof(struct Player));
+	struct Player *p2 = (struct Player*)malloc(sizeof(struct Player));
+	struct Player *p3 = (struct Player*)malloc(sizeof(struct Player));
+	struct Player *p4 = (struct Player*)malloc(sizeof(struct Player));
+	p1->i = 20; p1->j = 30; p1->Lives = 2; strcpy(p1->Name, "Yogev");
+	mat[p1->i][p1->j] = '1';
+	printf("p1 lives before: %d\n", p1->Lives);
+	linearShot(mat, 30, 10,p1,p2=NULL,p3=NULL,p4=NULL);
+	printf("p1 lives after: %d\n", p1->Lives);
 
 	
 
