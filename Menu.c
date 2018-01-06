@@ -259,8 +259,8 @@ void logShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3
 
 			y_val_temp = a*(log(xtemp) / log(base));
 
-			printf("y_val is: %d ", y_val_temp);
-			printf("xtemp is: %d\n", xtemp);
+			//printf("y_val is: %d ", y_val_temp);
+			//printf("xtemp is: %d\n", xtemp);
 			if (y_val_temp + y> 49) { flag = 1; }
 			if (y_val_temp < 0) { flag = 1; }
 			if (xtemp + x > 249) { flag = 1; }
@@ -313,6 +313,79 @@ void logShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3
 	}
 
 
+}
+
+void crazyShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
+	int flag = 0, xtemp = 0;
+	float a, b;
+	char leftRight[10];
+	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
+	scanf("%s", leftRight);
+	printf("From the equation y=a*sin(bx) \n");
+	printf("Enter the value of 'a'\n");
+	scanf("%f", &a);
+	printf("Enter the value of 'b'\n");
+	scanf("%f", &b);
+
+	if (strcmp(leftRight, "right") == 0) {
+
+		while (flag == 0) {
+			int y_val_temp = 0;
+
+			y_val_temp = a*sin(b*xtemp*(3.14/180));
+
+			printf("y_val is: %d ", y_val_temp);
+			printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp + y> 49) { flag = 1; }
+			//if (y_val_temp < 0) { flag = 1; }
+			if (xtemp + x > 249) { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x ] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][xtemp + x ] == '1' || board[49 - y_val_temp - y][xtemp + x] == '2' || board[49 - y_val_temp - y][xtemp + x] == '3' || board[49 - y_val_temp - y][xtemp + x ] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][xtemp + x ] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][xtemp + x ] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][xtemp + x ] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][xtemp + x ] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][xtemp + x] = '*'; }
+			xtemp++;
+		}
+
+	}
+	else {
+
+		while (flag == 0) {
+			int y_val_temp = 0;
+
+			y_val_temp = a*sin(b*xtemp);
+
+			printf("y_val is: %d ", y_val_temp);
+			printf("xtemp is: %d\n", xtemp);
+			if (y_val_temp - y> 49) { flag = 1; }
+			//if (y_val_temp < 0) { flag = 1; }
+
+			if (xtemp + x >249) { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == 'x') { flag = 1; }
+			if (board[49 - y_val_temp - y][249 - xtemp - x] == '1' || board[49 - y_val_temp - y][249 - xtemp - x] == '2' || board[49 - y_val_temp - y][249 - xtemp - x] == '3' || board[49 - y_val_temp - y][249 - xtemp - x] == '4') {
+				flag = 1;
+				//!function for hit!
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '1'&&p1 != NULL) { Player_get_hit(board, p1->i, p1->j, p1); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '2'&&p2 != NULL) { Player_get_hit(board, p2->i, p2->j, p2); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '3'&&p3 != NULL) { Player_get_hit(board, p3->i, p3->j, p3); }
+				if (board[49 - y_val_temp - y][249 - xtemp - x] == '4'&&p4 != NULL) { Player_get_hit(board, p4->i, p4->j, p4); }
+			}
+			if (flag == 0) { board[49 - y_val_temp - y][249 - xtemp - x] = '*'; }
+			xtemp++;
+		}
+
+	}
+	for (int i = 0; i <= 49; i++) {
+		for (int j = 0; j <= 249; j++) {
+			printf("%c", board[i][j]);
+		}
+		printf("\n");
+	}
 }
 
 int return_Y_value_linearshot(int x, float m, int n) {
@@ -369,7 +442,9 @@ int main() {
 
 	//linearShot(mat, 30, 10,p1,p2=NULL,p3=NULL,p4=NULL);
 	//parabolicShot(mat, 0, 10, p1, p2 = NULL, p3 = NULL, p4 = NULL);
-	logShot(mat, 50, 10, p1, p2 = NULL, p3 = NULL, p4 = NULL);
+	//logShot(mat, 50, 10, p1, p2 = NULL, p3 = NULL, p4 = NULL);
+
+	crazyShot(mat, 100, 25, p1, p2 = NULL, p3 = NULL, p4 = NULL);
 
 	printf("p1 lives after: %d\n", p1->Lives);
 
