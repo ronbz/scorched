@@ -123,6 +123,7 @@ void game() {
 			movement(mat, pl1);
 			shooting(mat, pl1, pl2, pl3, pl4, 1);
 			clear_shot_path(mat);
+			printMap(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl1->Name);
@@ -138,9 +139,10 @@ void game() {
 			movement(mat, pl2);
 			shooting(mat, pl1, pl2, pl3, pl4, 2);
 			clear_shot_path(mat);
+			printMap(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0))
 			{
-				printf("\nCongratulations %s , you won!\n",pl1->Name);
+				printf("\nCongratulations %s , you won!\n", pl1->Name);
 				// SENDING PL1 TO FILES //
 				break;
 			}
@@ -173,6 +175,7 @@ void game() {
 			movement(mat, pl1);
 			shooting(mat, pl1, pl2, pl3, pl4, 1);
 			clear_shot_path(mat);
+			printMap(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl1->Name);
@@ -194,6 +197,7 @@ void game() {
 			movement(mat, pl2);
 			shooting(mat, pl1, pl2, pl3, pl4, 2);
 			clear_shot_path(mat);
+			printMap(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl1->Name);
@@ -215,6 +219,7 @@ void game() {
 			movement(mat, pl3);
 			shooting(mat, pl1, pl2, pl3, pl4, 3);
 			clear_shot_path(mat);
+			printMap(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl1->Name);
@@ -255,10 +260,10 @@ void game() {
 		UpdatePlace(pl3, mat, map);
 		UpdatePlace(pl4, mat, map);
 		printMap(mat);
-		while (((pl1->Lives != 0) && (pl2->Lives != 0) && (pl3->Lives!=0)) || ((pl1->Lives != 0) && (pl2->Lives!=0) && (pl4->Lives != 0)) || ((pl1->Lives != 0) && (pl3->Lives != 0) && (pl4->Lives!=0)) || ((pl2->Lives != 0) && (pl3->Lives != 0) && (pl4->Lives != 0)))
+		while (((pl1->Lives != 0) && (pl2->Lives != 0) && (pl3->Lives != 0)) || ((pl1->Lives != 0) && (pl2->Lives != 0) && (pl4->Lives != 0)) || ((pl1->Lives != 0) && (pl3->Lives != 0) && (pl4->Lives != 0)) || ((pl2->Lives != 0) && (pl3->Lives != 0) && (pl4->Lives != 0)))
 		{
 			movement(mat, pl1);
-			shooting(mat,pl1,pl2,pl3,pl4, 1);
+			shooting(mat, pl1, pl2, pl3, pl4, 1);
 			clear_shot_path(mat);
 			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0) && (pl4->Lives == 0))
 			{
@@ -341,19 +346,19 @@ void game() {
 			movement(mat, pl4);
 			shooting(mat, pl1, pl2, pl3, pl4, 4);
 			clear_shot_path(mat);
-			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0)&&(pl4->Lives == 0))
+			if ((pl1->Lives = !0) && (pl2->Lives == 0) && (pl3->Lives == 0) && (pl4->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl1->Name);
 				// SENDING PL1 TO FILES //
 				break;
 			}
-			else if ((pl1->Lives == 0) && (pl2->Lives = !0) && (pl3->Lives == 0)&& (pl4->Lives==0))
+			else if ((pl1->Lives == 0) && (pl2->Lives = !0) && (pl3->Lives == 0) && (pl4->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl2->Name);
 				// SENDING PL2 TO FILES //
 				break;
 			}
-			else if ((pl1->Lives == 0) && (pl2->Lives == 0) && (pl3->Lives != 0)&&(pl4->Lives==0))
+			else if ((pl1->Lives == 0) && (pl2->Lives == 0) && (pl3->Lives != 0) && (pl4->Lives == 0))
 			{
 				printf("\nCongratulations %s , you won!\n", pl3->Name);
 				// SENDING PL3 TO FILES //
@@ -764,7 +769,6 @@ void printMap(char mat[height][length])
 	}
 }
 
-
 void rules() {
 	printf("\n        Game Rules:\n");
 	printf("       ------------\n");
@@ -831,8 +835,8 @@ void movement(char mat[height][length], Player *pl) {
 		getchar();
 		while (steps > count)
 		{
-			printf("cant move try again:\t");
-			scanf("%d", &steps);
+			printf("wrong number of steps, try again:\t");
+			scanf("%d", &steps);	
 			getchar();
 		}
 		int stepflag = steps;
@@ -1014,8 +1018,6 @@ void shooting(char mat[][length], Player* p1, Player* p2, Player* p3, Player* p4
 			if (tankNum == 4) { crazyShot(mat, p4->j, 49 - p4->i, p1, p2, p3, p4); }
 
 			break;
-		case 5:
-			i = 5;
 		}
 		counter++;
 		if (counter != 0)
@@ -1032,10 +1034,18 @@ void linearShot(char board[][250], int x, int y, Player* p1, Player *p2, Player 
 	int m, n = 0, xtemp = 0, y_val = 0;
 	int flag = 0;
 	float angleChoice, radFromDeg, angleRad;
-	char leftRight[10];
-	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
-	scanf("%s", leftRight);
-	if (strcmp(leftRight, "right") == 0) {
+	char leftRight;
+	printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+	scanf(" %c", &leftRight);
+	getchar();
+	while ((leftRight != 'r') && (leftRight != 'l') && (leftRight!='R') && (leftRight != 'L'))
+	{
+		printf("\nwrong input try again.\n");
+		printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+		scanf(" %c", &leftRight);
+		getchar();
+	}
+	if (leftRight == 'r') {
 		printf("Choose angle to shoot from 0-90:\n");
 		scanf("%f", &angleChoice);
 		//printf("angle choice: %f\n", angleChoice);
@@ -1128,6 +1138,7 @@ void linearShot(char board[][250], int x, int y, Player* p1, Player *p2, Player 
 	}
 	//printf("over linear\n");
 }
+
 float returnRad(float deg) {
 	printf("val is: %f\n deg: %f\nacos: %f", (deg*acos(-1) / 180), &deg, acos(-1));
 	return (deg*3.14 / 180);
@@ -1137,11 +1148,19 @@ float returnRad(float deg) {
 void parabolicShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
 	float a = 0, b = 0, d = 1; int c = y, xtemp = 0;
 	int flag = 0, y_val_temp = 0;
-	char leftRight[10];
+	char leftRight;
 	printf("x----%d  y-----%d\n", x, y);
-	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
-	scanf("%s", leftRight);
-	if (strcmp(leftRight, "right") == 0) {
+	printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+	scanf(" %c", &leftRight);
+	getchar();
+	while ((leftRight != 'r') && (leftRight != 'l') && (leftRight != 'R') && (leftRight != 'L'))
+	{
+		printf("\nwrong input try again.\n");
+		printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+		scanf(" %c", &leftRight);
+		getchar();
+	}
+	if (leftRight == 'r' || leftRight == 'R') {
 		printf("For the equation 'y=a(x*1/d)^2+b(x*1/d)+c'\n");
 		printf("Choose the value for 'a' : \n");
 		scanf("%f", &a);
@@ -1228,10 +1247,17 @@ void parabolicShot(char board[][250], int x, int y, Player* p1, Player *p2, Play
 void logShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
 	float a = 1, base = 1;
 	int flag = 0, xtemp = 1;
-	char leftRight[10];
-
-	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
-	scanf("%s", leftRight);
+	char leftRight;
+	printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+	scanf(" %c", &leftRight);
+	getchar();
+	while ((leftRight != 'r') && (leftRight != 'l') && (leftRight != 'R') && (leftRight != 'L'))
+	{
+		printf("\nwrong input try again.\n");
+		printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+		scanf(" %c", &leftRight);
+		getchar();
+	}
 	printf("From the equation y=a*log(base)(argument)\n");
 	printf("Enter value for 'a': \n");
 	scanf("%f", &a);
@@ -1311,9 +1337,17 @@ void logShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3
 void crazyShot(char board[][250], int x, int y, Player* p1, Player *p2, Player *p3, Player *p4) {
 	int flag = 0, xtemp = 0;
 	float a, b;
-	char leftRight[10];
-	printf("Are you shooting left or right?\nEnter your choice: 'left' or 'right'\n");
-	scanf("%s", leftRight);
+	char leftRight;
+	printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+	scanf(" %c", &leftRight);
+	getchar();
+	while ((leftRight != 'r') && (leftRight != 'l') && (leftRight != 'R') && (leftRight != 'L'))
+	{
+		printf("\nwrong input try again.\n");
+		printf("Are you shooting left or right?\nEnter your choice: 'l' or 'r'\n");
+		scanf(" %c", &leftRight);
+		getchar();
+	}
 	printf("From the equation y=a*sin(bx) \n");
 	printf("Enter the value of 'a'\n");
 	scanf("%f", &a);
