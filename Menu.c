@@ -964,10 +964,7 @@ void Player_get_hit(char board[][250], int x, int y, Player *player) {
 void shooting(char mat[][length], Player* p1, Player* p2, Player* p3, Player* p4, int tankNum) {
 	int i = 0;
 	do {
-		if (p1->Lives == 0 || p2->Lives == 0)
-		{
-			break;
-		}
+		int counter = 0;
 		printf("        Choose your shot \n");
 		printf("        -----------------\n");
 		printf("1. Linear Shot \n");
@@ -1019,6 +1016,11 @@ void shooting(char mat[][length], Player* p1, Player* p2, Player* p3, Player* p4
 			break;
 		case 5:
 			i = 5;
+		}
+		counter++;
+		if (counter != 0)
+		{
+			break;
 		}
 		getchar();
 	} while (i< 4);
